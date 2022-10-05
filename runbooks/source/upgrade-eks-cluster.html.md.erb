@@ -1,0 +1,150 @@
+---
+title: Upgrade EKS cluster
+weight: 53
+last_reviewed_on: 2022-06-29
+review_in: 3 months
+---
+
+# Upgrade EKS cluster
+
+The Cloud Platform EKS cluster upgrade consists of three distinct parts:
+
+- Upgrade EKS Terraform Module
+- Upgrade EKS version (Control Plane and Node Groups)
+- Upgrade addon(s)
+
+The Cloud Platform EKS clusters are created using the official [terraform-aws-eks](https://github.com/terraform-aws-modules/terraform-aws-eks) module. The EKS version and addons are currently independent of the version of the terraform-aws-eks module.
+Therefore, it will not always require an upgrade of the terraform-aws-eks module and/or the addons whenever there is an upgrade of the EKS version. Please check the changelogs for the terraform-aws-eks module, the EKS version and the addons when planning an upgrade.
+
+
+## Run the upgrade, via the tools image
+
+The cloud platform [tools image] has all the software required to run the upgrade.
+
+Start from the root directory of a working copy of the [infrastructure repo].
+
+With your environment variables set, launch a bash shell on the tools image:
+
+```bash
+make tools-shell
+```
+
+## Pre-requisites
+
+Before you begin, there are a few pre-requisites:
+
+- Your GPG key must be added to the [infrastructure repo](https://github.com/ministryofjustice/cloud-platform-infrastructure) so that you can run `git-crypt unlock`.
+
+- You have the [AWS CLI](https://aws.amazon.com/cli/) profile `moj-cp` with suitable credentials.
+
+- You have terraform and docker installed
+
+- Review the changelog of the [Kubernetes release](https://kubernetes.io/releases/) and the [EKS release](https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html) you are planning to upgrade to.
+
+- Review the official [EKS upgrading a cluster](https://docs.aws.amazon.com/eks/latest/userguide/update-cluster.html) document for any extra steps that are a part of a specific EKS release.
+
+- Run [kubent](https://github.com/doitintl/kube-no-trouble) against cluster to find deprecated APIs.
+
+## Upgrade Steps
+
+### Upgrade EKS Terraform Module
+
+As mentioned previously; when a new EKS major version is released, it is normally followed by a release of an associated [terraform-aws-eks module](https://github.com/terraform-aws-modules/terraform-aws-eks). 
+
+1) The first step of the EKS upgrade is to identify the corresponding module release with the EKS major version you want to upgrade to. Review the changes in the [changelog](https://github.com/terraform-aws-modules/terraform-aws-eks/blob/master/CHANGELOG.md). Plan/make any necessary changes or required updates. 
+
+Create a PR in Cloud Platform Infrastructure repository against the [EKS module](https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/main/terraform/aws-accounts/cloud-platform-aws/vpc/eks/cluster.tf) making the change to the desired [terraform-aws-eks version](https://github.com/terraform-aws-modules/terraform-aws-eks) 
+
+
+```
+ module "eks" {
+   source  = "terraform-aws-modules/eks/aws"
+-  version = "v16.2.0"
++  version = "v17.1.0"
+```
+
+2) Execute `terraform plan` (or the automated plan pipeline) and review changes. If changes are all as expected, run `terraform apply` to execute the changes.
+
+Note: When you run `terraform plan`, if it is only showing launch_template version change as below, executing `terraform apply` will only create a new template version. For cluster node groups to use the new template version created, you need to run `terraform apply` again, that will trigger a re-cycle of all the nodes. To avoid the re-cycle of nodes at this stage, we don't run `terraform apply` until we complete the upgrade of node groups along with updating the template version at a later stage.
+
+```
+  # module.eks.module.node_groups.aws_launch_template.workers["monitoring_ng"] will be updated in-place
+  ~ resource "aws_launch_template" "workers" {
+      ~ default_version         = 1 -> (known after apply)
+      ~ latest_version          = 1 -> (known after apply)
+```
+
+### Upgrade Control Plane
+
+3) Create a PR in Cloud Platform Infrastructure repository against the [EKS module](https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/main/terraform/aws-accounts/cloud-platform-aws/vpc/eks/cluster.tf) making the change to the desired EKS cluster version. 
+
+```
+ module "eks" {
+   source  = "terraform-aws-modules/eks/aws"
+-  cluster_version = "1.14"
++  cluster_version = "1.15"
+
+```
+
+4) Execute `terraform plan` (or the automated plan pipeline) and review changes. If changes are all as expected, perform the upgrade from the AWS Console EKS Control Plane. 
+
+We don't want to run `terraform apply` to apply the EKS cluster version, as the terraform apply process will take longer and timed out, also to avoid re-cycling of nodes as explained in step 2.
+
+Once the process is completed, [AWS Console](https://eu-west-2.console.aws.amazon.com/eks/home?region=eu-west-2#/clusters) will confirm the Control Plane is on the correct version.
+
+```
+$ aws eks describe-cluster --query 'cluster.version' --name manager
+"1.15"
+$
+```
+
+![AWS Console](../images/aws-eks-upgrade.png)
+
+### Upgrade Node Group(s)
+
+The easiest way to upgrade node groups is through AWS Console. We advise to follow the official AWS EKS upgrade instructions from the [Updating a Managed Node Group](https://docs.aws.amazon.com/eks/latest/userguide/update-managed-node-group.html) documentation.
+
+While updating the node group AMI release version, we should also change the launch template version which is created in step 2. To perform both the changes together, select `Update Node Group version` and  `Change launch template version` options as shown below. Select update strategy as `force update`, this does not respect pod disruption budgets and it forces node restarts.
+
+![Update Node Group](../images/update-node-group.png)
+
+### Upgrade addon(s)
+
+We have 3 addons managed through cloud-platform-terraform-eks-add-ons [module](https://github.com/ministryofjustice/cloud-platform-terraform-eks-add-ons).
+
+Refer to the below documents to get the addon version to be used with the EKS major version you just upgraded to.
+
+[managing-kube-proxy](https://docs.aws.amazon.com/eks/latest/userguide/managing-kube-proxy.html)
+
+[managing-coredns](https://docs.aws.amazon.com/eks/latest/userguide/managing-coredns.html)
+
+[managing-vpc-cni](https://docs.aws.amazon.com/eks/latest/userguide/managing-vpc-cni.html)
+
+Create a PR in Cloud Platform Infrastructure repository against the cloud-platform-terraform-eks-add-ons [module](https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/main/terraform/aws-accounts/cloud-platform-aws/vpc/eks/cluster.tf#L192) making the changes to the desired addon version’s [here](https://github.com/ministryofjustice/cloud-platform-terraform-eks-add-ons/blob/main/variables.tf#L28-L44). Execute `terraform plan` (or the automated plan pipeline) and review changes. If changes are all as expected, run `terraform apply` to execute the changes.
+
+### Troubleshooting
+
+When we update node group version or change launch template version, we had error "Reached max retries while trying to evict pods from nodes in node group live-default_ng_xxxx", even using force which does not respect pod disruption budgets and it forces node restarts. The force drain mode can fail to evict pods when there are pods in CrashLoopBack state and PDB is in effect, related to this [issue](https://github.com/kubernetes/kubernetes/issues/72320) 
+
+We can use cloudwatch logs insights with following filter to understand for which all pods the eviction was a failure.
+
+  1) Go to cloudwatch logs console, then click on insights.
+  2) Now in the current window, select log groups which corresponds to Cluster Control Plane logs. For live cluster it is: "/aws/eks/live/cluster"
+  3) Use the below filter to check on all eviction failures that happened to the EKS cluster
+
+  ```
+  fields @timestamp, @message | filter @logStream like "kube-apiserver-audit" | filter ispresent(requestURI) | filter objectRef.subresource = "eviction" | filter responseObject.status = "Failure"
+  ```
+
+  4) After running the query with above filter, you could see all the eviction failures which includes repeated retries performed by the client.
+  5) The "requestURI" present inside the message in the results of above query will point you on which pods triggered eviction failure.
+  6) Further to filter out all such duplicate eviction retries you could use the following query.
+
+  ```
+  fields @timestamp, @message | filter @logStream like "kube-apiserver-audit" | filter ispresent(requestURI) | filter objectRef.subresource = "eviction" | filter responseObject.status = "Failure" | display @logStream, requestURI, responseObject.message | stats count(*) as retry by requestURI, requestObject.message
+  ```
+
+Delete the eviction failure pods manually to avoid the error "Reached max retries while trying to evict pods from nodes in node group live-default_ng_xxxx"
+
+[tools image]: https://github.com/ministryofjustice/cloud-platform-tools-image
+[infrastructure repo]: https://github.com/ministryofjustice/cloud-platform-infrastructure

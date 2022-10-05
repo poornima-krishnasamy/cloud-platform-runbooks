@@ -1,0 +1,177 @@
+---
+title: Tips and Tricks
+weight: 9200
+last_reviewed_on: 2022-07-20
+review_in: 3 months
+---
+
+# Tips and Tricks
+
+A collection of useful one-liners and code snippets.
+
+## Delete an RDS database snapshot
+
+```bash
+$ aws rds delete-db-snapshot --db-snapshot-identifier cloud-platform-2f8c3c1ceaf0a05d-finalsnapshot
+```
+
+## Check the expiration date of the SSL certificate for a live domain
+
+```bash
+$ echo | openssl s_client -connect google.com:443 | openssl x509 -noout -enddate
+depth=1 C = US, O = Google Trust Services, CN = Google Internet Authority G3
+verify error:num=20:unable to get local issuer certificate
+verify return:0
+DONE
+notAfter=Oct 21 18:23:00 2019 GMT
+```
+## Delete a "stuck" resource
+
+kubectl can freeze with resources in status "Terminating", these workarounds can force a cleanup:
+
+Identify what resources are still present in a namespace:
+
+```
+ns=my-app ; for api in `kubectl api-resources --verbs=list --namespaced -o name` ; do echo $api ;  kubectl get $api -n $ns ; done
+```
+
+If a regular `delete` does not remove the resource, try
+
+```
+kubectl delete <resource> --grace-period=0 --force
+```
+
+and/or
+
+```
+kubectl patch <resource> -p '{"metadata":{"finalizers":[]}}' --type=merge
+```
+
+Where "resource" can be namespace, crd, pod etc
+
+## Filter namespaces by specific label or annotation
+
+For the label `cloud-platform.justice.gov.uk/is-production` with value `true`
+
+```bash
+kubectl get ns -l=cloud-platform.justice.gov.uk/is-production=true
+```
+
+You can use ```awk``` to output specific column
+
+```bash
+kubectl get namespaces -l=cloud-platform.justice.gov.uk/is-production=true | awk '{print $1,$2}'
+```
+
+To filter namespaces by label and annotation and display as namespace / annotation format
+
+```bash
+kubectl get namespaces -l=cloud-platform.justice.gov.uk/is-production=true -ojson | jq -r '.items[] | .metadata.name + " / " + .metadata.annotations["cloud-platform.justice.gov.uk/source-code"] '
+```
+
+If you need to install `jq`, do `brew install jq`
+
+## Find all pods running on a specific worker node
+
+```!bash
+kubectl get pods --all-namespaces -o wide --field-selector spec.nodeName=ip-172-20-80-62.eu-west-2.compute.internal
+```
+
+## Count pods running on all nodes
+
+Paste this into the search field on [Prometheus]:
+
+```
+max by(node) (max by(instance) (kubelet_running_pod_count{job="kubelet",metrics_path="/metrics"}) * on(instance) group_left(node) kubelet_node_name{job="kubelet",metrics_path="/metrics"})
+```
+## Output all records from Route53 as a CSV file
+
+Use [this script](https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/main/bin/route53-to-csv.rb)
+
+## Add more RSS feeds to `#cloud-platform-rss` channel
+
+` /feed subscribe <feed address>`
+
+There are more slash commands for rss feed which can be used to list, remove and help. Type `/feed help` in the #cloud-platform-rss` channel to get more details.
+
+To validate your feed url, test using the [w3c validator](https://validator.w3.org/feed/)
+
+To get the RSS feed url for github projects, use `<github repo url>/releases.atom`
+
+To add your first feed to a new slack channel, follow steps provided by [slack](https://slack.com/intl/en-gb/help/articles/218688467-Add-RSS-feeds-to-Slac://slack.com/intl/en-gb/help/articles/218688467-Add-RSS-feeds-to-Slack)
+
+## Find files which *don't* contain a particular string
+
+```
+for file in $(find * -name '*.erb'); do grep -q last_reviewed_on $file || echo $file; done
+```
+
+## Get AWS EC2 instance information for a node
+
+```
+aws ec2 describe-instances --filters 'Name=private-dns-name,Values=ip-172-20-127-140.eu-west-2.compute.internal'
+```
+
+## Create a one-off job to repeat a cronjob
+
+```
+kubectl -n concourse-main create job ds-update-orphaned-statefiles --from=cronjob/orphaned-terraform-statefiles
+```
+
+[Prometheus]: https://prometheus.cloud-platform.service.justice.gov.uk
+
+## Hijack a concourse job container
+
+```
+fly -t manager hijack -j environments-live/apply-namespace-changes-live
+```
+
+You'll be presented with a list of containers to choose from.
+
+## Help when manually deleting AWS resources
+
+Occasionally you'll need to manually delete AWS components. A neat trick is to use the [AWS Tag Editor](https://docs.aws.amazon.com/ARG/latest/userguide/tag-editor.html).
+
+- Open the [Tag Editor](https://eu-west-1.console.aws.amazon.com/resource-groups/tag-editor/find-resources?region=eu-west-1).
+- Select "All Supported Resources" from the "Resource type" drop down.
+- Click "Search Resources".
+- Use the filter to search for a tag, for example a cluster name: `cp-0909-1202`.
+
+You'll be presented with all resources with your tag associated, click the link to navigate to each resource and delete as appropriate.
+
+## Find out why your namespace isn't deleting
+
+```
+kubectl api-resources --verbs=list --namespaced -o name \
+| xargs -n 1 kubectl get --show-kind --ignore-not-found -n <namespace-name>
+```
+
+It should show you the reason the API doesn't want to delete. For example:
+
+```
+Error from server: conversion webhook for acme.cert-manager.io/v1alpha2, Kind=Order failed: Post https://cert-manager-webhook.cert-manager.svc:443/convert?timeout=30s: service "cert-manager-webhook" not found
+Error from server: conversion webhook for cert-manager.io/v1alpha2, Kind=CertificateRequest failed: Post https://cert-manager-webhook.cert-manager.svc:443/convert?timeout=30s: service "cert-manager-webhook" not found
+Error from server: conversion webhook for cert-manager.io/v1alpha2, Kind=Certificate failed: Post https://cert-manager-webhook.cert-manager.svc:443/convert?timeout=30s: service "cert-manager-webhook" not found
+```
+
+##  Modsec false positives
+
+When a genuine transaction causes a rule from the Core Rule Set to match in error it is described as a false positive. The [OWASP](https://coreruleset.org/faq/) rules are enabled on the ingress-controller level on the dedicated ModSec ingress-controller.
+The common problem with standard OWASP (CRS) is that it gives some [false positive][false-positive] results. The SQL Injection rules in particular are very prone to over alerting, open (issue)[https://github.com/SpiderLabs/owasp-modsecurity-crs/issues/794] related to sql injection.
+
+Every rule which is defined in the Core Rule Set (CRS) is identified by the ID. False positive rule ID's can be disabled using the example below.
+
+```
+  annotations:
+    nginx.ingress.kubernetes.io/enable-modsecurity: "true"
+    nginx.ingress.kubernetes.io/modsecurity-snippet: |
+      SecRuleEngine On
+      SecRuleRemoveById 111111
+```
+
+Some of the common issues and rules are given [here][common-rule-issue]
+
+Note: Turning off these rules completely will reduce the effectiveness of ModSecurity, so users should not use same SecRuleRemoveById's across applications, and before turning off any rules, users should make sure the exceptions apply to their particular use case.
+
+[false-positive]: https://coreruleset.org/docs/concepts/false_positives_tuning/
+[common-rule-issue]: https://stackoverflow.com/questions/33989273/modsecurity-excessive-false-positives/34027786#34027786

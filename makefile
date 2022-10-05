@@ -7,4 +7,4 @@ preview:
 		-v $$(pwd)/config:/app/config \
 		-v $$(pwd)/source:/app/source \
 		-p 4567:4567 \
-		-it $(IMAGE) /publishing-scripts/preview.sh
+		-it $(IMAGE) /scripts/preview.sh

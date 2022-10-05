@@ -1,0 +1,46 @@
+---
+title: Add Concourse to a test cluster
+weight: 51
+last_reviewed_on: 2022-09-02
+review_in: 3 months
+---
+
+# Add Concourse to a test cluster
+
+## Pre-requisites
+
+- A [test cluster][create-test-cluster]. For this guide, we'll assume it's called `david-test1`
+- You must install concourse
+- You must have [fly] installed
+
+## Process
+
+- Amend the following file and remove the count line from the [concourse module](https://github.com/ministryofjustice/cloud-platform-infrastructure/blob/main/terraform/aws-accounts/cloud-platform-aws/vpc/eks/components/components.tf#L2).
+- Apply the new terraorm to your test cluster
+- Clone the concourse [repository](https://github.com/ministryofjustice/cloud-platform-terraform-concourse).
+
+
+- Login via `fly`
+
+```
+fly --target david-test1 login \
+    --team-name main \
+    --concourse-url https://concourse.apps.david-test1.cloud-platform.service.justice.gov.uk
+```
+
+- Apply your pipeline
+
+```
+fly --target david-test1 set-pipeline \
+    --pipeline plan-pipeline \
+    --config pipelines/david-test1/main/plan-environments.yaml
+```
+
+Repeat this command whenever you make changes to the pipeline yaml file.
+
+- Set up secrets
+
+If your pipeline requires secrets, such as AWS credentials, you need to define those as kubernetes secrets in the `concourse-main` namespace (or `concourse-<team name>` if you're using a different concourse team, rather than `main`)
+
+[create-test-cluster]: eks-cluster.html#provisioning-eks-clusters
+[fly]: https://concourse-ci.org/fly.html

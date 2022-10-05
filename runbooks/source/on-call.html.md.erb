@@ -1,0 +1,82 @@
+---
+title: Going on call
+weight: 9150
+last_reviewed_on: 2022-07-29
+review_in: 3 months
+---
+
+# Going on call
+
+Cloud Platform team members provide support out of hours, as detailed in [Cloud Platform Operational Processes](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/reference/operational-processes.html#our-on-call-process)
+
+## What’s expected?
+
+### Expected:
+
+* Carry out [well-defined sensible actions](https://dsdmoj.atlassian.net/wiki/spaces/PLAT/pages/297533847/Run+Books) in response to critical incidents.
+* Understand how to carry out those actions, and what they do.
+* Verify access ahead of time to various systems and interfaces required to carry out these actions.
+
+> Getting set up to access production is quite involved if you don’t work on the service you’re supporting, so it’s worth making sure you’ve done so ahead of time.
+
+### Not Expected:
+
+* Take heroic actions and be able to solve any out-of-hours critical event single handedly.
+* Have very detailed knowledge of every nuance of every MOJ Digital service.
+* Carrying out risky activities or take judgement calls beyond your comfort zone without support.
+
+## Where do I start?
+
+1. Do two rotations on in-hours second line.
+2. Get production access to supported services.
+3. Get access to our on-call tools:
+    * [Pingdom](https://my.pingdom.com/)
+    * [Pagerduty](https://moj-digital-tools.pagerduty.com/) (and configure your contact details and notifications, this is the single source of truth for when you are on call.)
+    * [AWS](https://mojdsd.signin.aws.amazon.com/)
+    * the MOJDS VPN (and configure it to “send all traffic over VPN connection”)
+4. Do a dry-run of an incident.
+5. Get on the on-call rota.
+6. Log your hours.
+
+## What do I get for being on call?
+
+* 15% of day rate for every 8 hours that you’re on call out of standard working hours. This payment is simply for being on call.
+* 1/8 of day rate for each full hour actively worked while on call.
+
+Civil servant equivalent of day rate is base salary / 230
+
+## Civil servants
+
+1. Complete this [on-call-form](https://docs.google.com/spreadsheets/d/1lhnaqnHzCJxhW6QZ0HbyZL0-2Yp8hHaoMOx0J5fJjLA/edit#gid=53145943)
+2. Send it to your line manager, asking them to approve and submit it to SOP.
+
+The line manager should:
+
+1. Check the form against the [PagerDuty schedule](https://moj-digital-tools.pagerduty.com/schedules#PFX6FHX) and pay policy above. Note:
+    * _There are two on-call schedules for the Cloud Platform (Primary and Secondary), so when checking against PagerDuty, you may have to check against both_
+    * On-call hours: weekdays are 8 hours, weekend days and bank holidays are 15 hours ([support hours](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/reference/operational-processes.html#our-on-call-process))
+2. Approve the form by completing section 3 of the form
+3. Submit it in SOP:
+    * Go to "MOJ Manager Self-Service"
+    * Under "Other", use "Form Submission"
+    * Against the employee's name, select "Action"
+    * Fill out the web form as follows:
+        * Subject of this request: Other
+        * Describe the subject: On call allowance
+        * Confirm: Yes
+    * Form Submission Review:
+        * Attach the approved spreadsheet
+    * "Submit"
+    * In around 15 minutes you'll receive a SOP notification "SOP Service Request for X has been approved", which you will need to open and select 'Ok'. Otherwise you will get daily reminder emails.
+4. Let the claimant know that it is submitted to SOP, so it's due to be paid in this or next month's pay.
+
+## Contractors
+
+The exact process might depend upon which supplier you are through. Some (or maybe all, we haven’t worked this out yet) supplier systems don’t cope with trying to bill more than 5 days worth in a week (Specifically, "Hays" fall in to this category).
+
+If you are not working on a normal work day (Monday–Friday) then you can use this to bill:
+
+1. Ask your contact at the supplier to set you up on Fieldglass for overtime.
+2. Log your time
+   * ??? Log the overtime (More detail once someone has actually done this successfully); or
+   * If you are billing a ‘work day’ in lieu, note this as a comment in the timesheet

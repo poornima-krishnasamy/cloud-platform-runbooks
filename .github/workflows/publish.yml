@@ -1,23 +1,10 @@
-name: Publish gh-pages
-
+name: Publish runbooks
 on:
-  workflow_dispatch:
   push:
     branches:
-      - "main"
+      - "*"
     paths-ignore:
       - "docs/**"
-
-# GITHUB_TOKEN permissions to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# Allow one concurrent deployment
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
 
 jobs:
   build:
@@ -29,7 +16,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Compile Markdown to HTML and create artifact
         run: |
-          /scripts/compile-and-create-artifact.sh
+          cd runbooks; /scripts/compile-and-create-artifact.sh
       - name: Upload artifact to be published
         uses: actions/upload-artifact@main
         with:
@@ -39,13 +26,19 @@ jobs:
 
   deploy:
     needs: build
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Setup Pages
-        uses: actions/configure-pages@v2
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@main
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        with:
+          token: ${{ secrets.PUBLISHING_GIT_TOKEN }}
+          git-config-name: cloud-platform-moj
+          git-config-email: platforms@digital.justice.gov.uk
+          repository-name: poornima-krishnasamy/cloud-platform-runbooks
+          branch: gh-pages # The branch the action should deploy to.
+          folder: runbooks/docs # The folder the action should deploy.
+          clean: true
+          clean-exclude: |
+            CNAME
+            License
+            README.md

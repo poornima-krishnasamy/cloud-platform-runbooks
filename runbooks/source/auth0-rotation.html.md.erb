@@ -1,0 +1,78 @@
+---
+title: Credentials rotation for auth0 apps
+weight: 68
+last_reviewed_on: 2022-08-26
+review_in: 3 months
+---
+
+# <%= current_page.data.title %>
+
+Cloud-Platform team uses [auth0](https://auth0.com) in almost every component requiring authentication (clusters, Prometheus, Kibana, Grafana, etc). To rotate credentials we should we must follow steps below but it is important to keep in mind that users will require to re-authenticate (generate new kubeconfig file)
+
+## Preparation
+
+- Ensure users are aware of the change. It is important to point out that **they will have to reauthenticate against the cluster after the change** (following [user guide](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/kubectl-config.html#authentication)).
+- You must have all the tools and variables (such as Terraform, TF's auth0 provider, environment variables etc) ready to apply changes against our infrastructure repo.
+- It will be handy to have auth0 management console already opened in a browser tab, so you can verify and monitor the changes.
+
+## 1) Taint resources (terraform)
+
+Tainting auth0 resource will force new credentials generation. Go to [`cloud-platform-infrastructure/terraform/aws-accounts/cloud-platform-aws/vpc/eks` directory](https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/main/terraform/aws-accounts/cloud-platform-aws/vpc/eks) and run
+
+```
+$ terraform workspace select live
+$ terraform taint module.auth0.auth0_client.components
+```
+
+Make sure with `terraform plan` that auth0 resource is going to be recreated (it's going to be needed in the next step). 
+
+Apply changes if you are happy with them:
+
+```
+$ terraform apply
+```
+
+## 2) Apply changes within components (terraform)
+
+Execute `terraform plan` inside [`cloud-platform-infrastructure/terraform/aws-accounts/cloud-platform-aws/vpc/eks` directory](https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/main/terraform/aws-accounts/cloud-platform-aws/vpc/eks/components) 
+to ensure changes match resources below, if they do, apply them:
+
+```
+$terraform workspace select live
+$terraform plan
+$ terraform apply -target=module.monitoring.kubernetes_secret.grafana_secret -target=module.monitoring.helm_release.prometheus_proxy -target=module.monitoring.helm_release.alertmanager_proxy  -target=module.kuberos.helm_release.kuberos -target=module.monitoring.helm_release.kibana_audit_proxy -target=module.monitoring.helm_release.kibana_proxy
+```
+
+Unfortunately, grafana pod will not pick up the secret change, so it needs to be recyled (just delete it and it will automatically get redeployed):
+
+```
+$ GrafanaPodName=$(kubectl -n monitoring get pods -o name | grep grafana)
+$ kubectl -n monitoring delete pod $GrafanaPodName
+```
+
+## 3) Verifiying changes
+
+In order to verify that the changes were successfully applied, follow the checklist below (order doesn't matter):
+
+- You can authenticate to the cluster (follow [user guide](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/kubectl-config.html#authentication))
+- Ensure you can authenticate to [Grafana](https://grafana.cloud-platform.service.justice.gov.uk/)
+- Ensure you can authenticate to [AlertManager](https://alertmanager.cloud-platform.service.justice.gov.uk/)
+- Ensure you can authenticate to [Kibana](https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/app/kibana#/home?_g=())
+- Ensure you can authenticate to [Prometheus](https://prometheus.cloud-platform.service.justice.gov.uk/)
+
+## 4) Update Manager cluster within components (terraform)
+
+Our pipelines read auth0 credentials from a K8S secret inside the manager cluster. This secret is updated through concourse's TF module variable called `tf_provider_auth0_client_secret` and `tf_provider_auth0_client_id` in 
+[cloud-platform-infrastructure/terraform/aws-accounts/cloud-platform-aws/vpc/eks/components/terraform.tfvars](https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/main/terraform/aws-accounts/cloud-platform-aws/vpc/eks/components/terraform.tfvars)
+
+Switch to manager cluster and Execute `terraform plan` inside [`cloud-platform-infrastructure/terraform/aws-accounts/cloud-platform-aws/vpc/eks` directory](https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/main/terraform/aws-accounts/cloud-platform-aws/vpc/eks/components) 
+to ensure changes match resources below, if they do, apply them:
+
+```
+$ aws eks --region eu-west-2 update-kubeconfig --name manager
+$ terraform workspace select manager
+$ terraform plan
+$ terraform apply -target=module.monitoring.kubernetes_secret.grafana_secret -target=module.monitoring.helm_release.prometheus_proxy -target=module.monitoring.helm_release.alertmanager_proxy  -target=module.kuberos.helm_release.kuberos -target=module.concourse.kubernetes_secret.concourse_tf_auth0_credentials
+```
+
+You only need to update the source code file and have your changed merged to main. The [bootstrap pipeline](https://concourse.cloud-platform.service.justice.gov.uk/teams/main/pipelines/bootstrap) will apply your change.
