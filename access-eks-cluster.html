@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en" class="govuk-template no-js">
+  <head>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <title>Access EKS Cluster - Cloud Platform Runbooks</title>
+
+    <link href="stylesheets/manifest.css" rel="stylesheet" />
+
+    <link rel="canonical" href="https://runbooks.cloud-platform.service.justice.gov.uk/access-eks-cluster.html">
+
+      <meta name="robots" content="noindex" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:domain" content="runbooks.cloud-platform.service.justice.gov.uk" />
+      <meta name="twitter:image" content="https://runbooks.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta name="twitter:title" content="Access EKS Cluster - Cloud Platform Runbooks" />
+      <meta name="twitter:url" content="https://runbooks.cloud-platform.service.justice.gov.uk/access-eks-cluster.html" />
+
+      <meta property="og:image" content="https://runbooks.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta property="og:site_name" content="Cloud Platform Runbooks" />
+      <meta property="og:title" content="Access EKS Cluster" />
+      <meta property="og:type" content="object" />
+      <meta property="og:url" content="https://runbooks.cloud-platform.service.justice.gov.uk/access-eks-cluster.html" />
+
+    
+  </head>
+
+  <body class="govuk-template__body">
+    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+
+    <div class="app-pane">
+      <div class="app-pane__header toc-open-disabled">
+        <a href="#content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+
+        <header class="govuk-header app-header" role="banner" data-module="govuk-header">
+  <div class="govuk-header__container govuk-header__container--full-width">
+    <div class="govuk-header__logo">
+      <a href="/" class="govuk-header__link govuk-header__link--homepage">
+        <span class="govuk-header__product-name">
+          Cloud Platform Runbooks
+        </span>
+      </a>
+    </div>
+    <div class="govuk-header__content">
+      <nav class="govuk-header__navigation govuk-header__navigation--end" aria-label="Menu">
+        <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide menu">Menu</button>
+        <ul id="navigation" class="govuk-header__navigation-list">
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="mailto:platforms+runbooks@digital.justice.gov.uk?subject=Runbooks+feedback">Feedback / Report a problem</a>
+            </li>
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="/">Documentation</a>
+            </li>
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="https://github.com/ministryofjustice/cloud-platform/tree/main/runbooks">GitHub</a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+      </div>
+
+        <div id="toc-heading" class="toc-show fixedsticky">
+          <button type="button" class="toc-show__label js-toc-show" aria-controls="toc">
+            Table of contents <span class="toc-show__icon"></span>
+          </button>
+        </div>
+
+      <div class="app-pane__body" data-module="in-page-navigation">
+          <div class="app-pane__toc">
+            <div class="toc" data-module="table-of-contents" tabindex="-1" aria-label="Table of contents" role="dialog">
+              <div class="search" data-module="search" data-path-to-site-root="./">
+  <form action="https://www.google.co.uk/search" method="get" role="search" class="search__form govuk-!-margin-bottom-4">
+    <input type="hidden" name="as_sitesearch" value="https://runbooks.cloud-platform.service.justice.gov.uk"/>
+    <label class="govuk-label search__label" for="search" aria-hidden="true">
+      Search (via Google)
+    </label>
+    <input
+      type="text"
+      id="search" name="q"
+      class="govuk-input govuk-!-margin-bottom-0 search__input"
+      aria-controls="search-results"
+      placeholder="Search">
+    <button type="submit" class="search__button">Search</button>
+  </form>
+</div>
+
+              <button type="button" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></button>
+              <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading" data-module="collapsible-navigation">
+                      <ul>
+  <li>
+    <a href="./index.html"><span>Cloud Platform Runbooks</span></a>
+  </li>
+  <li>
+    <a href="./add-concourse-to-cluster.html"><span>Add Concourse to a test cluster</span></a>
+    <ul>
+      <li>
+        <a href="./add-concourse-to-cluster.html#add-concourse-to-a-test-cluster-pre-requisites"><span>Pre-requisites</span></a>
+      </li>
+      <li>
+        <a href="./add-concourse-to-cluster.html#process"><span>Process</span></a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href="./access-eks-cluster.html"><span>Access EKS cluster</span></a>
+    <ul>
+      <li>
+        <a href="./access-eks-cluster.html#pre-requisites"><span>Pre-requisites</span></a>
+        <ul>
+          <li>
+            <a href="./access-eks-cluster.html#create-kubeconfig-using-aws-command"><span>Create kubeconfig using aws command</span></a>
+          </li>
+          <li>
+            <a href="./access-eks-cluster.html#create-kubeconfig-manually-using-a-template"><span>Create kubeconfig manually using a template</span></a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href="./add-new-opa-policy.html"><span>Open Policy Agent policies</span></a>
+    <ul>
+      <li>
+        <a href="./add-new-opa-policy.html#adding-a-policy"><span>Adding a policy</span></a>
+      </li>
+      <li>
+        <a href="./add-new-opa-policy.html#writing-tests"><span>Writing tests</span></a>
+      </li>
+      <li>
+        <a href="./add-new-opa-policy.html#references"><span>References</span></a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href="./add-a-new-runbook.html"><span>Add a new runbook</span></a>
+    <ul>
+      <li>
+        <ul>
+          <li>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+
+              </nav>
+            </div>
+          </div>
+
+        <div class="app-pane__content toc-open-disabled">
+          <main id="content" class="technical-documentation" data-module="anchored-headings">
+            <h1 id="access-eks-cluster">Access EKS cluster</h1>
+<p>In order for kubectl to find and access an EKS cluster, it needs a kubeconfig file.</p>
+<p>When you create a new EKS cluster, the kubeconfig file is created locally within the <a href="https://github.com/ministryofjustice/cloud-platform-infrastructure/tree/main/terraform/aws-accounts/cloud-platform-aws/vpc/eks">cloud-platform-eks/files/</a>, named: <code>files/kubeconfig_${WorkspaceName}</code> This file is only available for the user who created the cluster.</p>
+<p>Other authorized users can create their own kubeconfig file to access the cluster as follows:</p>
+<h2 id="pre-requisites">Pre-requisites</h2>
+
+<ul>
+<li>AWS cli tool</li>
+<li>An AWS Profile <code>moj-cp</code> with credential for the Cloud Platform AWS account</li>
+</ul>
+<p>Set the AWS_PROFILE environment variable:</p>
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>export AWS_PROFILE=moj-cp
+</code></pre></div><h3 id="create-kubeconfig-using-aws-command">Create kubeconfig using aws command</h3>
+<p>Run this command:</p>
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>$ export KUBECONFIG=~/.kube/config
+$ aws eks --region eu-west-2 update-kubeconfig --name &lt;cluster-name&gt;
+</code></pre></div><p>You should see this message:</p>
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>Added new context arn:aws:eks:eu-west-2:754256621582:cluster/&lt;cluster-name&gt; to .kube/config
+</code></pre></div><p>Check that kubectl is properly configured by getting the cluster state</p>
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>$ kubectl cluster-info
+</code></pre></div><p>If kubectl is correctly configured to access the EKS cluster, you should see output similar to:</p>
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>Kubernetes master is running at https://B04C5FC7828A0515457E141A9610815D.sk1.eu-west-2.eks.amazonaws.com
+CoreDNS is running at https://B04C5FC7828A0515457E141A9610815D.sk1.eu-west-2.eks.amazonaws.com/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+</code></pre></div><p>You should now be able to run kubectl commands, such as <code>kubectl get namespaces</code>.</p>
+<h3 id="create-kubeconfig-manually-using-a-template">Create kubeconfig manually using a template</h3>
+<p>You can create a kubeconfig file manually, using the template below.</p>
+<p>Login to the AWS console. In the EKS service, select the cluster you need to access. You will see all the information related to the EKS cluster.</p>
+<p>Copy the values for <code>API server endpoint</code>, <code>Certificate authority</code> and <code>Cluster name</code> into this template:</p>
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>apiVersion: v1
+preferences: {}
+kind: Config
+
+clusters:
+- cluster:
+    server: &lt;API server endpoint&gt;
+    certificate-authority-data: &lt;Certificate authority&gt;
+  name: eks_&lt;Cluster name&gt;
+
+contexts:
+- context:
+    cluster: eks_&lt;Cluster name&gt;
+    user: eks_&lt;Cluster name&gt;
+  name: eks_&lt;Cluster name&gt;
+
+current-context: eks_&lt;Cluster name&gt;
+
+users:
+- name: eks_&lt;Cluster name&gt;
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1alpha1
+      command: aws-iam-authenticator
+      args:
+        - "token"
+        - "-i"
+        - "&lt;Cluster name&gt;"
+</code></pre></div><p>Save the kubeconfig with a filename (eg.: ~/.kube/config_eks) and use it to access the EKS cluster.</p>
+
+              <div data-module='page-expiry' data-last-reviewed-on="2022-10-29">
+    <div class='page-expiry--not-expired'>
+      This page was last reviewed on 29 July 2022.
+
+        It needs to be reviewed again on 29 October 2022
+        by the page owner <a href="https://mojdt.slack.com/messages/cloud-platform">#cloud-platform</a>
+        .
+    </div>
+
+    <div class='page-expiry--expired'>
+      This page was set to be reviewed before 29 October 2022
+       by the page owner <a href="https://mojdt.slack.com/messages/cloud-platform">#cloud-platform</a>.
+      This might mean the content is out of date.
+    </div>
+  </div>
+
+          </main>
+
+          <aside>
+              <ul class="contribution-banner">
+                <li><a href="https://github.com/ministryofjustice/cloud-platform/blob/main/runbooks/source/access-eks-cluster.html.md.erb">View source</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform/issues/new?body=Problem+with+%27Access+EKS+Cluster%27+%28https%3A%2F%2Frunbooks.cloud-platform.service.justice.gov.uk%2Faccess-eks-cluster.html%29&amp;labels=bug&amp;title=Re%3A+%27Access+EKS+Cluster%27">Report problem</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform">GitHub Repo</a></li>
+              </ul>
+          </aside>
+
+          <footer class="govuk-footer app-footer" role="contentinfo">
+  <div class="govuk-footer__meta">
+    <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+
+
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        class="govuk-footer__licence-logo"
+        xmlns="http://www.w3.org/2000/svg"
+        viewbox="0 0 483.2 195.7"
+        height="17"
+        width="41"
+      >
+        <path
+          fill="currentColor"
+          d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"
+        />
+      </svg>
+      <span class="govuk-footer__licence-description">
+        All content is available under the
+        <a
+          class="govuk-footer__link"
+          href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+          rel="license"
+        >Open Government Licence v3.0</a>, except where otherwise stated
+      </span>
+    </div>
+    <div class="govuk-footer__meta-item">
+      <a
+        class="govuk-footer__link govuk-footer__copyright-logo"
+        href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/"
+      >© Crown copyright</a>
+    </div>
+  </div>
+</footer>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <script src="javascripts/application.js"></script>
+  </body>
+</html>

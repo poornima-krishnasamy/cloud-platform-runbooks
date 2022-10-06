@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en" class="govuk-template no-js">
+  <head>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <title>Add a new OPA policy - Cloud Platform Runbooks</title>
+
+    <link href="stylesheets/manifest.css" rel="stylesheet" />
+
+    <link rel="canonical" href="https://runbooks.cloud-platform.service.justice.gov.uk/add-new-opa-policy.html">
+
+      <meta name="robots" content="noindex" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:domain" content="runbooks.cloud-platform.service.justice.gov.uk" />
+      <meta name="twitter:image" content="https://runbooks.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta name="twitter:title" content="Add a new OPA policy - Cloud Platform Runbooks" />
+      <meta name="twitter:url" content="https://runbooks.cloud-platform.service.justice.gov.uk/add-new-opa-policy.html" />
+
+      <meta property="og:image" content="https://runbooks.cloud-platform.service.justice.gov.uk/images/govuk-large.png" />
+      <meta property="og:site_name" content="Cloud Platform Runbooks" />
+      <meta property="og:title" content="Add a new OPA policy" />
+      <meta property="og:type" content="object" />
+      <meta property="og:url" content="https://runbooks.cloud-platform.service.justice.gov.uk/add-new-opa-policy.html" />
+
+    
+  </head>
+
+  <body class="govuk-template__body">
+    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+
+    <div class="app-pane">
+      <div class="app-pane__header toc-open-disabled">
+        <a href="#content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+
+        <header class="govuk-header app-header" role="banner" data-module="govuk-header">
+  <div class="govuk-header__container govuk-header__container--full-width">
+    <div class="govuk-header__logo">
+      <a href="/" class="govuk-header__link govuk-header__link--homepage">
+        <span class="govuk-header__product-name">
+          Cloud Platform Runbooks
+        </span>
+      </a>
+    </div>
+    <div class="govuk-header__content">
+      <nav class="govuk-header__navigation govuk-header__navigation--end" aria-label="Menu">
+        <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide menu">Menu</button>
+        <ul id="navigation" class="govuk-header__navigation-list">
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="mailto:platforms+runbooks@digital.justice.gov.uk?subject=Runbooks+feedback">Feedback / Report a problem</a>
+            </li>
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="/">Documentation</a>
+            </li>
+            <li class="govuk-header__navigation-item">
+              <a class="govuk-header__link" href="https://github.com/ministryofjustice/cloud-platform/tree/main/runbooks">GitHub</a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+      </div>
+
+        <div id="toc-heading" class="toc-show fixedsticky">
+          <button type="button" class="toc-show__label js-toc-show" aria-controls="toc">
+            Table of contents <span class="toc-show__icon"></span>
+          </button>
+        </div>
+
+      <div class="app-pane__body" data-module="in-page-navigation">
+          <div class="app-pane__toc">
+            <div class="toc" data-module="table-of-contents" tabindex="-1" aria-label="Table of contents" role="dialog">
+              <div class="search" data-module="search" data-path-to-site-root="./">
+  <form action="https://www.google.co.uk/search" method="get" role="search" class="search__form govuk-!-margin-bottom-4">
+    <input type="hidden" name="as_sitesearch" value="https://runbooks.cloud-platform.service.justice.gov.uk"/>
+    <label class="govuk-label search__label" for="search" aria-hidden="true">
+      Search (via Google)
+    </label>
+    <input
+      type="text"
+      id="search" name="q"
+      class="govuk-input govuk-!-margin-bottom-0 search__input"
+      aria-controls="search-results"
+      placeholder="Search">
+    <button type="submit" class="search__button">Search</button>
+  </form>
+</div>
+
+              <button type="button" class="toc__close js-toc-close" aria-controls="toc" aria-label="Hide table of contents"></button>
+              <nav id="toc" class="js-toc-list toc__list" aria-labelledby="toc-heading" data-module="collapsible-navigation">
+                      <ul>
+  <li>
+    <a href="./index.html"><span>Cloud Platform Runbooks</span></a>
+  </li>
+  <li>
+    <a href="./add-concourse-to-cluster.html"><span>Add Concourse to a test cluster</span></a>
+    <ul>
+      <li>
+        <a href="./add-concourse-to-cluster.html#pre-requisites"><span>Pre-requisites</span></a>
+      </li>
+      <li>
+        <a href="./add-concourse-to-cluster.html#process"><span>Process</span></a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href="./access-eks-cluster.html"><span>Access EKS cluster</span></a>
+    <ul>
+      <li>
+        <a href="./access-eks-cluster.html#access-eks-cluster-pre-requisites"><span>Pre-requisites</span></a>
+        <ul>
+          <li>
+            <a href="./access-eks-cluster.html#create-kubeconfig-using-aws-command"><span>Create kubeconfig using aws command</span></a>
+          </li>
+          <li>
+            <a href="./access-eks-cluster.html#create-kubeconfig-manually-using-a-template"><span>Create kubeconfig manually using a template</span></a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href="./add-new-opa-policy.html"><span>Open Policy Agent policies</span></a>
+    <ul>
+      <li>
+        <a href="./add-new-opa-policy.html#adding-a-policy"><span>Adding a policy</span></a>
+      </li>
+      <li>
+        <a href="./add-new-opa-policy.html#writing-tests"><span>Writing tests</span></a>
+      </li>
+      <li>
+        <a href="./add-new-opa-policy.html#references"><span>References</span></a>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <a href="./add-a-new-runbook.html"><span>Add a new runbook</span></a>
+    <ul>
+      <li>
+        <ul>
+          <li>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+
+              </nav>
+            </div>
+          </div>
+
+        <div class="app-pane__content toc-open-disabled">
+          <main id="content" class="technical-documentation" data-module="anchored-headings">
+            <h1 id="open-policy-agent-policies">Open Policy Agent policies</h1>
+<p>Policies are version controlled in the <a href="https://github.com/ministryofjustice/cloud-platform-terraform-opa/tree/main/resources/policies"><code>cloud-platform-infrastructure</code></a> repository.</p>
+<h2 id="adding-a-policy">Adding a policy</h2>
+<p>Create a new <code>.rego</code> file in the location above. Our policies are currently all defined in the
+<code>cloud_platform.admission</code> package and uses the <code>deny</code> rule to evaluate any checks:</p>
+<p>For example, the following policy would deny all <code>Services</code> of type <code>Loadbalancer</code></p>
+<div class="highlight"><pre class="highlight mosel" tabindex="0"><code><span class="k">package</span> <span class="n">cloud_platform</span><span class="p">.</span><span class="n">admission</span>
+
+<span class="n">import</span> <span class="n">data</span><span class="p">.</span><span class="n">kubernetes</span><span class="p">.</span><span class="n">namespaces</span>
+
+<span class="n">deny</span><span class="p">[</span><span class="n">msg</span><span class="p">]</span> <span class="p">{</span>
+  <span class="n">input</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">kind</span><span class="p">.</span><span class="n">kind</span> <span class="p">==</span> <span class="s2">"Service"</span>
+  <span class="n">input</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">object</span><span class="p">.</span><span class="n">spec</span><span class="p">.</span><span class="n">type</span> <span class="p">==</span> <span class="s2">"LoadBalancer"</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="writing-tests">Writing tests</h2>
+<p>Testing the policies against live data is not a straightforward process and debugging policies is quite minimal at the
+moment. The best way to develop policies is by practicing test-driven development.</p>
+<p>Assuming you have created <code>my_policy.rego</code> with your <code>deny</code> rule defined, you simply need to create
+<code>my_policy_test.rego</code> to define your tests. You can look at the existing policies for examples. There are a few generic
+mocking functions defined which you might find useful.</p>
+<p>Finally, testing the policies, you should see something like this:</p>
+<div class="highlight"><pre class="highlight plaintext" tabindex="0"><code>$ opa test -v .
+data.cloud_platform.admission.test_ingress_create_allowed: PASS (1.956µs)
+data.cloud_platform.admission.test_ingress_create_conflict: PASS (1.518µs)
+data.cloud_platform.admission.test_ingress_update_same_host: PASS (1.088µs)
+data.cloud_platform.admission.test_ingress_update_new_host: PASS (1.246µs)
+data.cloud_platform.admission.test_ingress_update_existing_host: PASS (1.417µs)
+data.cloud_platform.admission.test_ingress_update_existing_host_other_namespace: PASS (1.295µs)
+--------------------------------------------------------------------------------
+PASS: 6/6
+</code></pre></div><p>Additionally, tests will be run against pull requests to the repository in a CircleCI job.</p>
+<h2 id="references">References</h2>
+
+<ul>
+<li><a href="https://www.openpolicyagent.org/docs/latest/how-do-i-write-policies/">How to write policies</a></li>
+<li><a href="https://www.openpolicyagent.org/docs/latest/how-do-i-test-policies/">How to test policies</a></li>
+<li><a href="https://github.com/timothyhinrichs/opa/blob/4d5a1071e5099da42c2cde02faac2075f3ba2bf9/docs/content/docs/policy-primer-k8s.md">Kubernetes Policy Primer
+</a></li>
+</ul>
+
+              <div data-module='page-expiry' data-last-reviewed-on="2022-10-04">
+    <div class='page-expiry--not-expired'>
+      This page was last reviewed on 4 July 2022.
+
+        It needs to be reviewed again on 4 October 2022
+        by the page owner <a href="https://mojdt.slack.com/messages/cloud-platform">#cloud-platform</a>
+        .
+    </div>
+
+    <div class='page-expiry--expired'>
+      This page was set to be reviewed before 4 October 2022
+       by the page owner <a href="https://mojdt.slack.com/messages/cloud-platform">#cloud-platform</a>.
+      This might mean the content is out of date.
+    </div>
+  </div>
+
+          </main>
+
+          <aside>
+              <ul class="contribution-banner">
+                <li><a href="https://github.com/ministryofjustice/cloud-platform/blob/main/runbooks/source/add-new-opa-policy.html.md.erb">View source</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform/issues/new?body=Problem+with+%27Add+a+new+OPA+policy%27+%28https%3A%2F%2Frunbooks.cloud-platform.service.justice.gov.uk%2Fadd-new-opa-policy.html%29&amp;labels=bug&amp;title=Re%3A+%27Add+a+new+OPA+policy%27">Report problem</a></li>
+                <li><a href="https://github.com/ministryofjustice/cloud-platform">GitHub Repo</a></li>
+              </ul>
+          </aside>
+
+          <footer class="govuk-footer app-footer" role="contentinfo">
+  <div class="govuk-footer__meta">
+    <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+
+
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        class="govuk-footer__licence-logo"
+        xmlns="http://www.w3.org/2000/svg"
+        viewbox="0 0 483.2 195.7"
+        height="17"
+        width="41"
+      >
+        <path
+          fill="currentColor"
+          d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"
+        />
+      </svg>
+      <span class="govuk-footer__licence-description">
+        All content is available under the
+        <a
+          class="govuk-footer__link"
+          href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+          rel="license"
+        >Open Government Licence v3.0</a>, except where otherwise stated
+      </span>
+    </div>
+    <div class="govuk-footer__meta-item">
+      <a
+        class="govuk-footer__link govuk-footer__copyright-logo"
+        href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/"
+      >© Crown copyright</a>
+    </div>
+  </div>
+</footer>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <script src="javascripts/application.js"></script>
+  </body>
+</html>
