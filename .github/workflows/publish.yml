@@ -17,6 +17,10 @@ jobs:
       - name: Compile Markdown to HTML and create artifact
         run: |
           cd runbooks; /scripts/compile-and-create-artifact.sh
+      - name: Install rsync
+        run: |
+          apk update && apk add rsync
+          which rsync
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
