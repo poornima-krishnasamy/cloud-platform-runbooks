@@ -26,7 +26,7 @@ jobs:
           apk update && apk add rsync
           which rsync
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        uses: JamesIves/github-pages-deploy-action@v4.4.1
         with:
           # token: ${{ secrets.PUBLISHING_GIT_TOKEN }}
           # git-config-name: cloud-platform-moj
